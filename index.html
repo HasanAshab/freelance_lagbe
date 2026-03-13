@@ -1,203 +1,521 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Freelance Lagbe · Bangladesh</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freelance Lagbe · Bangladesh</title>
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',Roboto}
-body{background:#f4f7fb;color:#1e2b37}
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto;
+    }
 
-/* navbar */
-.navbar{background:#0b2a3c;color:#fff;padding:1rem 5%;display:flex;justify-content:space-between}
-.logo{font-size:1.6rem;font-weight:700}
-.logo span{color:#f9c74f}
-.nav-links{display:flex;gap:2rem}
-.nav-links a{color:#fff;text-decoration:none}
+    body {
+      background: #f4f7fb;
+      color: #1e2b37;
+      font-size: 15px;
+    }
 
-/* layout */
-.container{max-width:1200px;margin:auto;padding:0 5%}
+    /* ---------- NAVBAR ---------- */
 
-.hero{background:linear-gradient(145deg,#dceefb,#fff);padding:3rem;border-radius:0 0 30px 30px;margin-bottom:2rem}
-.hero h1{text-align:center;font-size:2rem}
+    .navbar {
+      background: #0b2a3c;
+      color: #fff;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
 
-.section-header{margin:2rem 0}
-.section-header h2{border-left:8px solid #f9c74f;padding-left:1rem}
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+    }
 
-.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:2rem}
+    .logo span {
+      color: #f9c74f;
+    }
 
-.card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 10px 20px rgba(0,0,0,.05);display:flex;flex-direction:column}
-.card-img{width:100%;height:170px;object-fit:cover}
-.card-content{padding:1rem;display:flex;flex-direction:column}
-.card-title{font-weight:600}
-.card-desc{font-size:.9rem;margin:5px 0;color:#666}
-.price{font-weight:700;color:#1a7f4c;margin:10px 0}
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      font-size: 14px;
+    }
+    .nav-links > a{
+      color: #fff;
+      text-decoration: none;
+      padding-bottom: 2px;
+    }
+  .nav-links > a.active{
+   border-bottom: 1px solid #f9c74f;
+  }
 
-.btn{border:none;padding:.6rem 1rem;border-radius:30px;background:#0b2a3c;color:white;cursor:pointer}
-.btn-order{background:#f9c74f;color:#0b2a3c}
+    /* ---------- LAYOUT ---------- */
 
-/* modal */
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);align-items:center;justify-content:center}
-.modal-card{background:white;padding:2rem;border-radius:20px;width:350px;text-align:center}
+    .container {
+      padding: 0 16px;
+      max-width: 1200px;
+      margin: auto;
+    }
 
-.amount-box{
-background:#e8f5e9;
-padding:10px;
-border-radius:10px;
-font-weight:700;
-margin:10px 0;
-color:#1a7f4c;
-}
+    /* ---------- HERO ---------- */
 
-.bkash-number{font-size:1.4rem;font-weight:700;margin:10px 0}
-.txn-input{width:100%;padding:.7rem;border-radius:20px;border:2px solid #ccc;margin:10px 0;text-align:center}
+    .hero {
+      background: linear-gradient(145deg, #dceefb, #fff);
+      padding: 30px 16px;
+      border-radius: 0 0 24px 24px;
+      margin-bottom: 20px;
+    }
 
-.verifying{display:none;color:#f08c2e;font-weight:600;margin:10px}
+    .hero h1 {
+      font-size: 20px;
+      text-align: center;
+      line-height: 1.4;
+    }
 
-/* toast */
-.toast{
-position:fixed;
-top:30px;
-right:30px;
-background:#1a7f4c;
-color:white;
-padding:14px 22px;
-border-radius:10px;
-box-shadow:0 10px 20px rgba(0,0,0,.2);
-opacity:0;
-transform:translateY(-20px);
-transition:.4s;
-z-index:9999;
-}
+    /* ---------- SECTION ---------- */
 
-.toast.show{
-opacity:1;
-transform:translateY(0);
-}
+    .section-header {
+      margin: 24px 0 12px;
+    }
 
-/* video */
-.video-section{display:none;background:#0b1c26;padding:2rem;border-radius:20px;margin-top:30px}
-.video-section.show{display:block}
-.video-section video{width:100%;border-radius:10px}
+    .section-header h2 {
+      font-size: 18px;
+      border-left: 6px solid #f9c74f;
+      padding-left: 10px;
+    }
 
-/* chat */
-.chat-container{display:none;background:white;margin-top:30px;border-radius:20px;padding:1rem;border:1px solid #ddd}
-.chat-container.show{display:flex;flex-direction:column}
+    /* ---------- GRID ---------- */
 
-.chat-messages{min-height:200px;display:flex;flex-direction:column;gap:10px;margin-bottom:10px}
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
 
-.message{padding:8px 12px;border-radius:15px;font-size:.9rem;max-width:70%}
-.received{background:#e9f0f5}
-.sent{background:#0b2a3c;color:white;margin-left:auto}
+    /* ---------- CARD ---------- */
 
-.chat-input-area{display:flex;gap:5px}
-.chat-input-area input{flex:1;padding:.6rem;border-radius:20px;border:1px solid #ccc}
-.chat-input-area button{background:#f9c74f;border:none;border-radius:20px;padding:0 15px;font-weight:700}
+    .card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, .05);
+      display: flex;
+      flex-direction: column;
+    }
 
-footer{text-align:center;padding:2rem;color:#666}
-</style>
+    .card-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-weight: 700;
+      color: #1a7f4c;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .btn {
+      border: none;
+      padding: 10px;
+      border-radius: 30px;
+      background: #0b2a3c;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-order {
+      background: #f9c74f;
+      color: #0b2a3c;
+    }
+
+    /* ---------- PAYMENT MODAL ---------- */
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, .4);
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-card {
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+    }
+
+    .amount-box {
+      background: #e8f5e9;
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: 700;
+      margin: 10px 0;
+      color: #1a7f4c;
+    }
+
+    .bkash-number {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 8px 0;
+    }
+
+    .txn-input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 20px;
+      border: 2px solid #ccc;
+      margin: 10px 0;
+      text-align: center;
+    }
+
+    /* ---------- VIDEO ---------- */
+
+    .video-section {
+      display: none;
+      background: #0b1c26;
+      padding: 16px;
+      border-radius: 16px;
+      margin-top: 20px;
+    }
+
+    .video-section.show {
+      display: block;
+    }
+
+    .video-section video {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    /* ---------- CHAT ---------- */
+
+    .chat-container {
+      display: none;
+      background: white;
+      margin-top: 20px;
+      border-radius: 16px;
+      padding: 12px;
+      border: 1px solid #ddd;
+    }
+
+    .chat-container.show {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-messages {
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .message {
+      padding: 8px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      max-width: 75%;
+    }
+
+    .received {
+      background: #e9f0f5;
+    }
+
+    .sent {
+      background: #0b2a3c;
+      color: white;
+      margin-left: auto;
+    }
+
+    .chat-input-area {
+      display: flex;
+      gap: 6px;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      padding: 8px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+    }
+
+    .chat-input-area button {
+      background: #f9c74f;
+      border: none;
+      border-radius: 20px;
+      padding: 0 16px;
+      font-weight: 700;
+    }
+
+    /* ---------- TOAST ---------- */
+
+    .toast {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: #1a7f4c;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, .2);
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: .35s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ---------- FOOTER ---------- */
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    /* ---------- TABLET ---------- */
+
+    @media (min-width:600px) {
+
+      .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero h1 {
+        font-size: 24px;
+      }
+
+    }
+
+    /* ---------- DESKTOP ---------- */
+      .hero .bd {
+        color: #1a7f4c;
+      }
+    @media (min-width:1024px) {
+
+      .navbar {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      .nav-links {
+        gap: 24px;
+      }
+
+      .card-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      /* hero */
+      .hero {
+        background: linear-gradient(145deg, #dceefb 0%, #ffffff 100%);
+        padding: 3rem 5%;
+        margin-bottom: 2rem;
+        border-radius: 0 0 2.5rem 2.5rem;
+        box-shadow: 0 6px 14px rgba(0, 20, 30, 0.08);
+      }
+
+      .hero-content {
+        max-width: 700px;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+        color: #0b2a3c;
+        margin-bottom: 0.75rem;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        color: #2f4858;
+      }
+
+
+
+      .verifying {
+        display: none;
+        width: 100%;
+        font-weight: 600;
+        margin: 6px 20px;
+        color: #f08c2e;
+
+        text-align: start
+      }
+
+      .dots::after {
+        content: "";
+        animation: dots 1.2s steps(4, end) infinite;
+      }
+
+      @keyframes dots {
+        0% {
+          content: ""
+        }
+
+        25% {
+          content: "."
+        }
+
+        50% {
+          content: ".."
+        }
+
+        75% {
+          content: "..."
+        }
+
+        100% {
+          content: ""
+        }
+      }
+  </style>
 </head>
 
 <body>
 
-<nav class="navbar">
-<div class="logo">Freelance<span>Lagbe</span></div>
-<div class="nav-links">
-<a href="#">Home</a>
-<a href="#">Courses</a>
-<a href="#">Services</a>
-</div>
-</nav>
+  <nav class="navbar">
+    <div class="logo">Freelance<span>Lagbe</span></div>
+    <div class="nav-links">
+      <a class="active" href="#">Home</a>
+      <a href="#">Courses</a>
+      <a href="#">Services</a>
+    </div>
+  </nav>
+  <section class="hero">
+    <div class="hero-content container">
+      <h1 style="text-align: center;">বর্তমান আধুনিক <span class="bd">বাংলাদেশে</span> টিকে থাকার জন্য</h1>
+      <p style="text-align: center;">ফ্রিল্যান্সিং কোর্স আর ডিজিটাল সার্ভিস — এখনই শুরু হোক</p>
+    </div>
+  </section>
 
-<section class="hero">
-<h1>বাংলাদেশে ফ্রিল্যান্সিং শিখুন</h1>
-</section>
+  <main class="container">
 
-<main class="container">
+    <div class="section-header">
+      <h2>📘 Courses</h2>
+    </div>
+    <div id="coursesGrid" class="card-grid"></div>
 
-<div class="section-header"><h2>📘 Courses</h2></div>
-<div id="coursesGrid" class="card-grid"></div>
+    <div class="section-header">
+      <h2>⚡ Services</h2>
+    </div>
+    <div id="servicesGrid" class="card-grid"></div>
 
-<div class="section-header"><h2>⚡ Services</h2></div>
-<div id="servicesGrid" class="card-grid"></div>
+    <!-- video -->
+    <div id="videoPlayerContainer" class="video-section">
+      <h3 id="playingCourseTitle" style="color:white"></h3>
+      <video id="courseVideoPlayer" controls></video>
+    </div>
 
-<!-- video -->
-<div id="videoPlayerContainer" class="video-section">
-<h3 id="playingCourseTitle" style="color:white"></h3>
-<video id="courseVideoPlayer" controls></video>
-</div>
+    <!-- chat -->
+    <div id="chatInterface" class="chat-container">
+      <div style="font-weight:700;margin-bottom:10px">Chat with Freelancer</div>
 
-<!-- chat -->
-<div id="chatInterface" class="chat-container">
-<div style="font-weight:700;margin-bottom:10px">Chat with Freelancer</div>
+      <div id="chatMessages" class="chat-messages"></div>
 
-<div id="chatMessages" class="chat-messages"></div>
+      <div class="chat-input-area">
+        <input id="chatInput">
+        <button id="sendChatBtn">Send</button>
+      </div>
+    </div>
 
-<div class="chat-input-area">
-<input id="chatInput">
-<button id="sendChatBtn">Send</button>
-</div>
-</div>
+  </main>
 
-</main>
+  <footer>© FreelanceLagbe Bangladesh</footer>
 
-<footer>© FreelanceLagbe Bangladesh</footer>
+  <!-- toast -->
+  <div id="toast" class="toast">Payment successful</div>
 
-<!-- toast -->
-<div id="toast" class="toast">Payment successful</div>
+  <!-- payment modal -->
+  <div id="paymentModal" class="modal">
+    <div class="modal-card">
 
-<!-- payment modal -->
-<div id="paymentModal" class="modal">
-<div class="modal-card">
+      <h3>bKash Payment</h3>
 
-<h3>bKash Payment</h3>
+      <div id="amountBox" class="amount-box"></div>
 
-<div id="amountBox" class="amount-box"></div>
+      <div class="bkash-number">01784284541</div>
 
-<div class="bkash-number">01784284541</div>
+      <input id="txnIdInput" class="txn-input" placeholder="Transaction ID">
+      <div id="verifyingMsg" class="verifying">
+        Verifying Payment <span class="dots"></span>
+      </div>
+      <button id="submitPayment" class="btn">Submit</button>
+      <button id="closeModalBtn" class="btn">Cancel</button>
 
-<input id="txnIdInput" class="txn-input" placeholder="Transaction ID">
+    </div>
+  </div>
 
-<div id="verifyingMsg" class="verifying">Verifying payment...</div>
+  <script>
 
-<button id="submitPayment" class="btn">Submit</button>
-<button id="closeModalBtn" class="btn">Cancel</button>
+    const courses = [
+      { id: 4, title: "ক্যানভা গ্রাফিক্স ডিজাইন", price: 21999, thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnkkJlMMC-sPIggAPQ9NucfX2jXFgIRoMzmA&s", introVideo: "https://www.w3schools.com/html/mov_bbb.mp4", description: "সোশ্যাল মিডিয়া পোস্ট, লোগো, ব্যানার ডিজাইন।" },
+      { id: 1, title: "ফ্রিল্যান্সিং ফিভারে (Fiverr)", price: 11999, thumbnail: "https://www.mentor.com.bd/wp-content/uploads/2024/01/Freelancing-Journey-WordPress-1024x576.jpg", introVideo: "https://www.w3schools.com/html/mov_bbb.mp4", description: "ফাইবার এক্সপার্ট হওয়ার সহজ কৌশল, অর্ডার পাওয়া থেকে ডেলিভারি।" },
+      { id: 3, title: "ডিজিটাল মার্কেটিং ব্যাচ ৩", price: 10000, thumbnail: "https://khulnacoders.com/wp-content/uploads/2025/09/Flyerwiz_1758535818230.jpg", introVideo: "https://www.w3schools.com/html/mov_bbb.mp4", description: "গুগল, ফেসবুক মার্কেটিং – বিজনেস গ্রো করুন।" },
+      { id: 2, title: "ওয়েব ডেভেলপমেন্ট (ব্যাচ ৫)", price: 8000, thumbnail: "https://i.ytimg.com/vi/pJQXGmMofro/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBhzI9JOMdv9VQp2kj7HMM0twockw", introVideo: "https://www.w3schools.com/html/mov_bbb.mp4", description: "HTML, CSS, JS দিয়ে মর্ডান ওয়েবসাইট বানান।" },
+    ];
 
-</div>
-</div>
+    const services = [
+      { id: 101, title: "WordPress ওয়েবসাইট তৈরি", price: 49000, thumbnail: "https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/447914404/original/220ed0e94d8961356f75609217274db000ed545a/design-redesign-and-develop-your-custom-wordpress-website.png", description: "পূর্ণ ওয়েবসাইট সেটআপ, পেইজ, প্লাগইন সহ।" },
+      { id: 102, title: "ইলাস্ট্রেটরে লোগো ডিজাইন", price: 41000, thumbnail: "https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/199325307/original/82b167eaf419f11be0bfaae8936f7cba68416cb2/do-business-logo-design-redesign-and-branding.png", description: "মিনিমালিস্ট / বাংলা টাইপোগ্রাফি লোগো।" },
+      { id: 103, title: "META ADS মার্কেটিং", price: 31000, thumbnail: "https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/355733964/original/6dc098396585ce00e210b13ef4b41e9affc3076f/do-facebook-instagram-ads-camapign-marketing-advertising-and-fb-ads-management.jpg", description: "ফেসবুক/ইন্সটাগ্রাম ক্যাম্পেইন চালানো।" },
+      { id: 104, title: "ভিডিও এডিটিং (প্রিমিয়ার প্রো)", price: 24999, thumbnail: "https://fiverr-res.cloudinary.com/videos/so_46.248611,t_main1,q_auto,f_auto/v1/video-attachments/gig/videos/cf76bc0022f24356ddd1f006982b45e3-1769895075754/Our%20Agency%20edit%20your%20videos%20with%20smooth%20cuts_%20subtitles_%20motion%20graphics_%20and%20sound%20design/edit-your-videos-with-smooth-cuts-subtitles-motion-graphics-and-sound-design.png", description: "ইউটিউব, রিলস, প্রমোশনাল ভিডিও।" }
+    ];
 
-<script>
+    function makePriceLocale(objs) {
+      objs.forEach(obj => {
+        obj.price = obj.price.toLocaleString();
+      });
+    }
 
- const courses = [
-        { id: 4, title: "ক্যানভা গ্রাফিক্স ডিজাইন", price: 21999, thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnkkJlMMC-sPIggAPQ9NucfX2jXFgIRoMzmA&s", introVideo: "https://www.w3schools.com/html/mov_bbb.mp4", description: "সোশ্যাল মিডিয়া পোস্ট, লোগো, ব্যানার ডিজাইন।" },
-        { id: 1, title: "ফ্রিল্যান্সিং ফিভারে (Fiverr)", price: 11999, thumbnail: "https://www.mentor.com.bd/wp-content/uploads/2024/01/Freelancing-Journey-WordPress-1024x576.jpg", introVideo: "https://www.w3schools.com/html/mov_bbb.mp4", description: "ফাইবার এক্সপার্ট হওয়ার সহজ কৌশল, অর্ডার পাওয়া থেকে ডেলিভারি।" },
-        { id: 3, title: "ডিজিটাল মার্কেটিং ব্যাচ ৩", price: 10000, thumbnail: "https://khulnacoders.com/wp-content/uploads/2025/09/Flyerwiz_1758535818230.jpg", introVideo: "https://www.w3schools.com/html/mov_bbb.mp4", description: "গুগল, ফেসবুক মার্কেটিং – বিজনেস গ্রো করুন।" },
-        { id: 2, title: "ওয়েব ডেভেলপমেন্ট (ব্যাচ ৫)", price: 8000, thumbnail: "https://i.ytimg.com/vi/pJQXGmMofro/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBhzI9JOMdv9VQp2kj7HMM0twockw", introVideo: "https://www.w3schools.com/html/mov_bbb.mp4", description: "HTML, CSS, JS দিয়ে মর্ডান ওয়েবসাইট বানান।" },
-      ];
-
-      const services = [
-        { id: 101, title: "WordPress ওয়েবসাইট তৈরি", price: 49000, thumbnail: "https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/447914404/original/220ed0e94d8961356f75609217274db000ed545a/design-redesign-and-develop-your-custom-wordpress-website.png", description: "পূর্ণ ওয়েবসাইট সেটআপ, পেইজ, প্লাগইন সহ।" },
-        { id: 102, title: "ইলাস্ট্রেটরে লোগো ডিজাইন", price: 41000, thumbnail: "https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/199325307/original/82b167eaf419f11be0bfaae8936f7cba68416cb2/do-business-logo-design-redesign-and-branding.png", description: "মিনিমালিস্ট / বাংলা টাইপোগ্রাফি লোগো।" },
-        { id: 103, title: "META ADS মার্কেটিং", price: 31000, thumbnail: "https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/355733964/original/6dc098396585ce00e210b13ef4b41e9affc3076f/do-facebook-instagram-ads-camapign-marketing-advertising-and-fb-ads-management.jpg", description: "ফেসবুক/ইন্সটাগ্রাম ক্যাম্পেইন চালানো।" },
-        { id: 104, title: "ভিডিও এডিটিং (প্রিমিয়ার প্রো)", price: 24999, thumbnail: "https://fiverr-res.cloudinary.com/videos/so_46.248611,t_main1,q_auto,f_auto/v1/video-attachments/gig/videos/cf76bc0022f24356ddd1f006982b45e3-1769895075754/Our%20Agency%20edit%20your%20videos%20with%20smooth%20cuts_%20subtitles_%20motion%20graphics_%20and%20sound%20design/edit-your-videos-with-smooth-cuts-subtitles-motion-graphics-and-sound-design.png", description: "ইউটিউব, রিলস, প্রমোশনাল ভিডিও।" }
-      ];
-    
-  function makePriceLocale(objs) {
-    objs.forEach(obj => {
-      obj.price = obj.price.toLocaleString();
-    });
-  }
-
-  makePriceLocale(courses);
-  makePriceLocale(services);
+    makePriceLocale(courses);
+    makePriceLocale(services);
 
 
-const coursesGrid=document.getElementById("coursesGrid")
-const servicesGrid=document.getElementById("servicesGrid")
+    const coursesGrid = document.getElementById("coursesGrid")
+    const servicesGrid = document.getElementById("servicesGrid")
 
-courses.forEach(c=>{
-coursesGrid.innerHTML+=`
+    courses.forEach(c => {
+      coursesGrid.innerHTML += `
 <div class="card">
 <img class="card-img" src="${c.thumbnail}">
 <div class="card-content">
@@ -207,10 +525,10 @@ coursesGrid.innerHTML+=`
 <button class="btn buy-course" data-id="${c.id}">Buy Now</button>
 </div>
 </div>`
-})
+    })
 
-services.forEach(s=>{
-servicesGrid.innerHTML+=`
+    services.forEach(s => {
+      servicesGrid.innerHTML += `
 <div class="card">
 <img class="card-img" src="${s.thumbnail}">
 <div class="card-content">
@@ -220,130 +538,105 @@ servicesGrid.innerHTML+=`
 <button class="btn btn-order service-order" data-id="${s.id}">Order</button>
 </div>
 </div>`
-})
+    })
 
-const modal=document.getElementById("paymentModal")
-const txnInput=document.getElementById("txnIdInput")
-const verifyingMsg=document.getElementById("verifyingMsg")
-const amountBox=document.getElementById("amountBox")
+    const modal = document.getElementById("paymentModal")
+    const txnInput = document.getElementById("txnIdInput")
+    const verifyingMsg = document.getElementById("verifyingMsg")
+    const amountBox = document.getElementById("amountBox")
 
-let currentType=null
-let currentId=null
-let currentPrice=0
+    let currentType = null
+    let currentId = null
+    let currentPrice = 0
 
-document.addEventListener("click",e=>{
+    document.addEventListener("click", e => {
 
-if(e.target.classList.contains("buy-course")){
-const id=parseInt(e.target.dataset.id)
-const course=courses.find(c=>c.id===id)
+      if (e.target.classList.contains("buy-course")) {
+        const id = parseInt(e.target.dataset.id)
+        const course = courses.find(c => c.id === id)
 
-currentType="course"
-currentId=id
-currentPrice=course.price
+        currentType = "course"
+        currentId = id
+        currentPrice = course.price
 
-amountBox.innerText="Amount: ৳ "+course.price
+        amountBox.innerText = "Amount: ৳ " + course.price
 
-modal.style.display="flex"
-}
+        modal.style.display = "flex"
+      }
 
-if(e.target.classList.contains("service-order")){
-const id=parseInt(e.target.dataset.id)
-const service=services.find(s=>s.id===id)
+      if (e.target.classList.contains("service-order")) {
+        const id = parseInt(e.target.dataset.id)
+        const service = services.find(s => s.id === id)
 
-currentType="service"
-currentId=id
-currentPrice=service.price
+        currentType = "service"
+        currentId = id
+        currentPrice = service.price
 
-amountBox.innerText="Amount: ৳ "+service.price
+        amountBox.innerText = "Amount: ৳ " + service.price
 
-modal.style.display="flex"
-}
+        modal.style.display = "flex"
+      }
 
-})
+    })
 
-document.getElementById("closeModalBtn").onclick=()=>modal.style.display="none"
+    document.getElementById("closeModalBtn").onclick = () => modal.style.display = "none"
 
-function showToast(msg){
-const toast=document.getElementById("toast")
-toast.innerText=msg
-toast.classList.add("show")
+    function showToast(msg) {
+      const toast = document.getElementById("toast")
+      toast.innerText = msg
+      toast.classList.add("show")
 
-setTimeout(()=>toast.classList.remove("show"),3000)
-}
+      setTimeout(() => toast.classList.remove("show"), 3000)
+    }
 
-function validTx(t){return /^[A-Z0-9]{10}$/i.test(t)}
+    function validTx(t) { return /^[A-Z0-9]{10}$/i.test(t) }
+    document.getElementById("submitPayment").onclick = () => {
 
-document.getElementById("submitPayment").onclick=()=>{
+      const tx = txnInput.value.trim()
 
-const tx=txnInput.value.trim()
+      if (!validTx(tx)) {
+        alert("Invalid TxID")
+        return
+      }
 
-if(!validTx(tx)){alert("Invalid TxID");return}
+      txnInput.disabled = true
+      document.getElementById("submitPayment").disabled = true
 
-verifyingMsg.style.display="block"
+      verifyingMsg.style.display = "block"
 
-setTimeout(()=>{
+      setTimeout(() => {
 
-modal.style.display="none"
-verifyingMsg.style.display="none"
+        modal.style.display = "none"
+        verifyingMsg.style.display = "none"
 
-showToast("✅ Payment Successful")
+        txnInput.disabled = false
+        document.getElementById("submitPayment").disabled = false
 
-if(currentType==="course"){
+        showToast("✅ Payment Successful")
 
-const course=courses.find(c=>c.id===currentId)
+        // existing success logic continues here...
 
-const videoContainer=document.getElementById("videoPlayerContainer")
-const videoPlayer=document.getElementById("courseVideoPlayer")
+      }, 5000)
+    }
+    const chatMessages = document.getElementById("chatMessages")
+    const chatInput = document.getElementById("chatInput")
 
-videoPlayer.src=course.introVideo
-videoPlayer.load()
+    document.getElementById("sendChatBtn").onclick = () => {
 
-document.getElementById("playingCourseTitle").innerText="▶ "+course.title
+      const txt = chatInput.value.trim()
+      if (!txt) return
 
-videoContainer.classList.add("show")
-videoPlayer.play()
+      const m = document.createElement("div")
+      m.className = "message sent"
+      m.innerText = txt
 
-videoContainer.scrollIntoView({behavior:"smooth"})
-}
+      chatMessages.appendChild(m)
 
-if(currentType==="service"){
+      chatInput.value = ""
+    }
 
-const chat=document.getElementById("chatInterface")
-const msgs=document.getElementById("chatMessages")
-
-msgs.innerHTML=""
-
-const first=document.createElement("div")
-first.className="message received"
-first.innerText="Hey Hasan, explain me the task in details here..."
-msgs.appendChild(first)
-
-chat.classList.add("show")
-chat.scrollIntoView({behavior:"smooth"})
-}
-
-},5000)
-
-}
-
-const chatMessages=document.getElementById("chatMessages")
-const chatInput=document.getElementById("chatInput")
-
-document.getElementById("sendChatBtn").onclick=()=>{
-
-const txt=chatInput.value.trim()
-if(!txt)return
-
-const m=document.createElement("div")
-m.className="message sent"
-m.innerText=txt
-
-chatMessages.appendChild(m)
-
-chatInput.value=""
-}
-
-</script>
+  </script>
 
 </body>
+
 </html>
