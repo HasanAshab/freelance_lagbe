@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freelance Lagbe · Bangladesh</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: #f4f7fb;
+      color: #1e2b37;
+      line-height: 1.5;
+    }
+
+    /* navbar */
+    .navbar {
+      background: #0b2a3c;
+      color: white;
+      padding: 1rem 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    .logo span {
+      color: #f9c74f;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      font-weight: 500;
+    }
+    .nav-links a {
+      color: #e9f0f5;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+    .nav-links a:hover {
+      color: #f9c74f;
+    }
+
+    /* container */
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 5%;
+    }
+
+    /* hero */
+    .hero {
+      background: linear-gradient(145deg, #dceefb 0%, #ffffff 100%);
+      padding: 3rem 5%;
+      margin-bottom: 2rem;
+      border-radius: 0 0 2.5rem 2.5rem;
+      box-shadow: 0 6px 14px rgba(0,20,30,0.08);
+    }
+    .hero-content {
+      max-width: 700px;
+    }
+    .hero h1 {
+      font-size: 2.5rem;
+      color: #0b2a3c;
+      margin-bottom: 0.75rem;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: #2f4858;
+    }
+    .hero .bd {
+      font-weight: 600;
+      color: #1a7f4c;
+    }
+
+    /* section headers */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 2.5rem 0 1.5rem;
+    }
+    .section-header h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #163a4c;
+      border-left: 8px solid #f9c74f;
+      padding-left: 1rem;
+    }
+
+    /* cards grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    .card {
+      background: white;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(0,40,50,0.08);
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 22px 30px -10px rgba(0,80,100,0.15);
+    }
+    .card-img {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      background: #cbd5e0;
+    }
+    .card-content {
+      padding: 1.3rem 1.2rem 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #0b2a3c;
+    }
+    .card-desc {
+      font-size: 0.9rem;
+      color: #4a5f6b;
+      margin-bottom: 1.2rem;
+      line-height: 1.4;
+    }
+    .price {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #1a7f4c;
+      margin-bottom: 1rem;
+    }
+    .price small {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #6b7f8b;
+    }
+    .btn {
+      background: #0b2a3c;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      border-radius: 2.5rem;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      border: 1px solid #0b2a3c;
+      margin-top: auto;
+    }
+    .btn:hover {
+      background: #1d4b63;
+      border-color: #1d4b63;
+    }
+    .btn-order {
+      background: #f9c74f;
+      color: #0b2a3c;
+      border: none;
+      font-weight: 700;
+    }
+    .btn-order:hover {
+      background: #f7b731;
+    }
+
+    /* modal overlay */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+    .modal-card {
+      background: white;
+      max-width: 420px;
+      width: 90%;
+      border-radius: 2rem;
+      padding: 2.2rem 2rem;
+      box-shadow: 0 30px 50px rgba(0,30,30,0.3);
+      text-align: center;
+    }
+    .modal-card h3 {
+      font-size: 1.8rem;
+      color: #0b2a3c;
+      margin-bottom: 0.5rem;
+    }
+    .bkash-number {
+      background: #e3f2f2;
+      padding: 0.8rem;
+      border-radius: 2rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin: 1rem 0 0.8rem;
+      color: #0b4858;
+      border: 1px dashed #1a7f4c;
+    }
+    .instruction {
+      font-size: 0.95rem;
+      background: #fef5e7;
+      padding: 0.8rem;
+      border-radius: 1rem;
+      margin: 1rem 0;
+      color: #3d4f5c;
+    }
+    .txn-input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #d0dee9;
+      border-radius: 3rem;
+      font-size: 1rem;
+      margin: 0.5rem 0 1.2rem;
+      outline: none;
+      transition: 0.2s;
+      text-align: center;
+    }
+    .txn-input:focus {
+      border-color: #1a7f4c;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 0.8rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .modal-actions button {
+      padding: 0.8rem 1.8rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-submit {
+      background: #1a7f4c;
+      color: white;
+      flex: 2;
+    }
+    .btn-cancel {
+      background: #e2eaf0;
+      color: #1e2b37;
+      flex: 1;
+    }
+    .verifying {
+      display: none;
+      color: #f08c2e;
+      font-weight: 600;
+      margin: 0.8rem 0;
+    }
+
+    /* video player (hidden initially) */
+    .video-section {
+      margin: 2.5rem 0;
+      background: #0b1c26;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      display: none;
+    }
+    .video-section.show {
+      display: block;
+    }
+    .video-wrapper video {
+      width: 100%;
+      max-height: 380px;
+      border-radius: 1.2rem;
+      outline: none;
+    }
+    .video-title {
+      color: white;
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* chat interface */
+    .chat-container {
+      background: white;
+      border-radius: 1.8rem;
+      box-shadow: 0 20px 30px -8px rgba(0,40,50,0.2);
+      margin: 2.5rem 0 3rem;
+      padding: 1.5rem 1.2rem 0.8rem 1.2rem;
+      display: none;
+      flex-direction: column;
+      border: 1px solid #cbdde6;
+    }
+    .chat-container.show {
+      display: flex;
+    }
+    .chat-header {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: #0b2a3c;
+      padding-bottom: 0.8rem;
+      border-bottom: 2px solid #f9c74f;
+    }
+    .chat-messages {
+      min-height: 200px;
+      max-height: 280px;
+      overflow-y: auto;
+      padding: 1rem 0.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .message {
+      max-width: 75%;
+      padding: 0.7rem 1.2rem;
+      border-radius: 1.5rem;
+      word-wrap: break-word;
+      font-size: 0.95rem;
+    }
+    .message.received {
+      background: #e9f0f5;
+      align-self: flex-start;
+      border-bottom-left-radius: 5px;
+    }
+    .message.sent {
+      background: #0b2a3c;
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 5px;
+    }
+    .chat-input-area {
+      display: flex;
+      gap: 0.5rem;
+      border-top: 1px solid #d3e2ea;
+      padding-top: 1rem;
+      margin-top: 0.5rem;
+    }
+    .chat-input-area input {
+      flex: 1;
+      padding: 0.8rem 1.2rem;
+      border: 1px solid #bcd3e0;
+      border-radius: 2.5rem;
+      outline: none;
+      font-size: 0.95rem;
+    }
+    .chat-input-area button {
+      background: #f9c74f;
+      border: none;
+      border-radius: 2.5rem;
+      padding: 0 1.5rem;
+      font-weight: 700;
+      color: #0b2a3c;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 5%;
+      color: #5b727f;
+      border-top: 1px solid #d0e0e9;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 600px) {
+      .navbar {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">Freelance<span>Lagbe</span>.com</div>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="#">Courses</a>
+      <a href="#">Services</a>
+      <a href="#">Contact</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-content container">
+      <h1 style="text-align: center;">বর্তমান আধুনিক <span class="bd">বাংলাদেশে</span> টিকে থাকার জন্য</h1>
+      <p>ফ্রিল্যান্সিং কোর্স আর ডিজিটাল সার্ভিস — এখনই শুরু হোক</p>
+    </div>
+  </section>
+
+  <main class="container">
+    <!-- courses section -->
+    <div class="section-header">
+      <h2>📘 জনপ্রিয় কোর্স</h2>
+    </div>
+    <div id="coursesGrid" class="card-grid"></div>
+
+    <!-- services section (Fiverr style) -->
+    <div class="section-header">
+      <h2>⚡ আমরা আপনার জন্য কাজ করি</h2>
+    </div>
+    <div id="servicesGrid" class="card-grid"></div>
+
+    <!-- hidden video player (course intro) -->
+    <div id="videoPlayerContainer" class="video-section">
+      <div class="video-title" id="playingCourseTitle">▶️ চলছে: </div>
+      <div class="video-wrapper">
+        <video id="courseVideoPlayer" controls autoplay>
+          <source src="" type="video/mp4">
+          Your browser does not support video.
+        </video>
+      </div>
+    </div>
+
+    <!-- chat interface (hidden until service payment) -->
+    <div id="chatInterface" class="chat-container">
+      <div class="chat-header">📞 কাজের আলোচনা (Hasan)</div>
+      <div id="chatMessages" class="chat-messages">
+        <div class="message received">Hey Hasan, let's discuss the task.</div>
+      </div>
+      <div class="chat-input-area">
+        <input type="text" id="chatInput" placeholder="Type a message...">
+        <button id="sendChatBtn">Send</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    © ২০২৫ FreelanceLagbe.com — ঢাকা, বাংলাদেশ | ডিজিটাল প্রকল্প
+  </footer>
+
+  <!-- payment modal (same for both flows) -->
+  <div id="paymentModal" class="modal">
+    <div class="modal-card">
+      <h3>📲 bKash পেমেন্ট</h3>
+      <div class="bkash-number">01784-284541</div>
+      <div class="instruction">
+        <strong>Send Money</strong> এই নম্বরে সঠিক টাকা পাঠান।<br>
+        ট্রানজেকশন আইডি (TxID) নিচে বসান।
+      </div>
+      <input type="text" id="txnIdInput" class="txn-input" placeholder="TxID (যেমন: A1B2C3D4E5)" maxlength="10">
+      <div id="verifyingMsg" class="verifying">⏳ Verifying payment ...</div>
+      <div class="modal-actions">
+        <button class="btn-submit" id="submitPayment">Submit</button>
+        <button class="btn-cancel" id="closeModalBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // -------- data arrays --------
+      const courses = [
+        { id: 4, title: "ক্যানভা গ্রাফিক্স ডিজাইন", price: 21999, thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnkkJlMMC-sPIggAPQ9NucfX2jXFgIRoMzmA&s", introVideo: "https://www.w3schools.com/html/mov_bbb.mp4", description: "সোশ্যাল মিডিয়া পোস্ট, লোগো, ব্যানার ডিজাইন।" },
+        { id: 1, title: "ফ্রিল্যান্সিং ফিভারে (Fiverr)", price: 11999, thumbnail: "https://www.mentor.com.bd/wp-content/uploads/2024/01/Freelancing-Journey-WordPress-1024x576.jpg", introVideo: "https://www.w3schools.com/html/mov_bbb.mp4", description: "ফাইবার এক্সপার্ট হওয়ার সহজ কৌশল, অর্ডার পাওয়া থেকে ডেলিভারি।" },
+        { id: 3, title: "ডিজিটাল মার্কেটিং ব্যাচ ৩", price: 10000, thumbnail: "https://khulnacoders.com/wp-content/uploads/2025/09/Flyerwiz_1758535818230.jpg", introVideo: "https://www.w3schools.com/html/mov_bbb.mp4", description: "গুগল, ফেসবুক মার্কেটিং – বিজনেস গ্রো করুন।" },
+        { id: 2, title: "ওয়েব ডেভেলপমেন্ট (ব্যাচ ৫)", price: 8000, thumbnail: "https://i.ytimg.com/vi/pJQXGmMofro/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBhzI9JOMdv9VQp2kj7HMM0twockw", introVideo: "https://www.w3schools.com/html/mov_bbb.mp4", description: "HTML, CSS, JS দিয়ে মর্ডান ওয়েবসাইট বানান।" },
+      ];
+
+      const services = [
+        { id: 101, title: "WordPress ওয়েবসাইট তৈরি", price: 49000, thumbnail: "https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/447914404/original/220ed0e94d8961356f75609217274db000ed545a/design-redesign-and-develop-your-custom-wordpress-website.png", description: "পূর্ণ ওয়েবসাইট সেটআপ, পেইজ, প্লাগইন সহ।" },
+        { id: 102, title: "ইলাস্ট্রেটরে লোগো ডিজাইন", price: 41000, thumbnail: "https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/199325307/original/82b167eaf419f11be0bfaae8936f7cba68416cb2/do-business-logo-design-redesign-and-branding.png", description: "মিনিমালিস্ট / বাংলা টাইপোগ্রাফি লোগো।" },
+        { id: 103, title: "META ADS মার্কেটিং", price: 31000, thumbnail: "https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/355733964/original/6dc098396585ce00e210b13ef4b41e9affc3076f/do-facebook-instagram-ads-camapign-marketing-advertising-and-fb-ads-management.jpg", description: "ফেসবুক/ইন্সটাগ্রাম ক্যাম্পেইন চালানো।" },
+        { id: 104, title: "ভিডিও এডিটিং (প্রিমিয়ার প্রো)", price: 24999, thumbnail: "https://fiverr-res.cloudinary.com/videos/so_46.248611,t_main1,q_auto,f_auto/v1/video-attachments/gig/videos/cf76bc0022f24356ddd1f006982b45e3-1769895075754/Our%20Agency%20edit%20your%20videos%20with%20smooth%20cuts_%20subtitles_%20motion%20graphics_%20and%20sound%20design/edit-your-videos-with-smooth-cuts-subtitles-motion-graphics-and-sound-design.png", description: "ইউটিউব, রিলস, প্রমোশনাল ভিডিও।" }
+      ];
+
+      // render functions
+      const coursesGrid = document.getElementById('coursesGrid');
+      const servicesGrid = document.getElementById('servicesGrid');
+
+      function renderCourses() {
+        coursesGrid.innerHTML = '';
+        courses.forEach(c => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <img src="${c.thumbnail}" alt="${c.title}" class="card-img">
+            <div class="card-content">
+              <div class="card-title">${c.title}</div>
+              <div class="card-desc">${c.description}</div>
+              <div class="price">৳ ${c.price.toLocaleString()} <small>BDT</small></div>
+              <button class="btn buy-course" data-id="${c.id}">Buy Now</button>
+            </div>
+          `;
+          coursesGrid.appendChild(card);
+        });
+      }
+
+      function renderServices() {
+        servicesGrid.innerHTML = '';
+        services.forEach(s => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <img src="${s.thumbnail}" alt="${s.title}" class="card-img">
+            <div class="card-content">
+              <div class="card-title">${s.title}</div>
+              <div class="card-desc">${s.description}</div>
+              <div class="price">৳ ${s.price.toLocaleString()} <small>BDT</small></div>
+              <button class="btn btn-order service-order" data-id="${s.id}">Order Now</button>
+            </div>
+          `;
+          servicesGrid.appendChild(card);
+        });
+      }
+
+      renderCourses();
+      renderServices();
+
+      // ---------- modal & payment simulation ----------
+      const modal = document.getElementById('paymentModal');
+      const txnInput = document.getElementById('txnIdInput');
+      const verifyingMsg = document.getElementById('verifyingMsg');
+      const submitBtn = document.getElementById('submitPayment');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+      
+      // state
+      let currentPaymentType = null; // 'course' or 'service'
+      let currentItemId = null;
+
+      // open modal
+      function openPaymentModal(type, id) {
+        currentPaymentType = type;
+        currentItemId = id;
+        txnInput.value = '';
+        verifyingMsg.style.display = 'none';
+        submitBtn.disabled = false;
+        txnInput.disabled = false;
+        modal.style.display = 'flex';
+      }
+
+      // close modal
+      function closeModal() {
+        modal.style.display = 'none';
+        currentPaymentType = null;
+        currentItemId = null;
+      }
+
+      // Buy / Order event listeners (delegation)
+      document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('buy-course')) {
+          const courseId = parseInt(e.target.dataset.id);
+          openPaymentModal('course', courseId);
+        }
+        if (e.target.classList.contains('service-order')) {
+          const serviceId = parseInt(e.target.dataset.id);
+          openPaymentModal('service', serviceId);
+        }
+      });
+
+      closeModalBtn.addEventListener('click', closeModal);
+      window.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+
+      // validation: 10 alphanumeric (basic)
+      function isValidTxID(txid) {
+        return /^[A-Z0-9]{10}$/i.test(txid);
+      }
+
+      // payment submit
+      submitBtn.addEventListener('click', () => {
+        const txid = txnInput.value.trim();
+        if (!isValidTxID(txid)) {
+          alert("❌ সঠিক TxID দিন (১০ অক্ষর, ইংরেজি বড়হাত/সংখ্যা)");
+          return;
+        }
+
+        // disable & show verifying
+        submitBtn.disabled = true;
+        txnInput.disabled = true;
+        verifyingMsg.style.display = 'block';
+
+        // simulate 5 seconds delay
+        setTimeout(() => {
+          verifyingMsg.style.display = 'none';
+          alert('✅ পেমেন্ট সফল হয়েছে!');
+          
+          // after success: close modal
+          closeModal();
+
+          if (currentPaymentType === 'course') {
+            // find course video
+            const course = courses.find(c => c.id === currentItemId);
+            if (course) {
+              const videoContainer = document.getElementById('videoPlayerContainer');
+              const videoPlayer = document.getElementById('courseVideoPlayer');
+              const titleSpan = document.getElementById('playingCourseTitle');
+              videoPlayer.src = course.introVideo;
+              titleSpan.innerText = `▶️ চলছে: ${course.title} (প্রোমো)`;
+              videoContainer.classList.add('show');
+              videoPlayer.load();
+              videoPlayer.play().catch(e => console.log('autoplay prevented?', e));
+            }
+          } 
+          else if (currentPaymentType === 'service') {
+            // show chat interface and optionally reset messages
+            const chatDiv = document.getElementById('chatInterface');
+            chatDiv.classList.add('show');
+            // ensure initial message exists
+            const msgContainer = document.getElementById('chatMessages');
+            if (msgContainer.children.length === 0 || msgContainer.children[0]?.innerText !== "Hey Hasan, let's discuss the task.") {
+              // but we already have it in HTML, but just in case clear duplicates
+            }
+          }
+
+          // reset type
+          currentPaymentType = null;
+          currentItemId = null;
+        }, 5000); // 5 seconds
+      });
+
+      // ---------- chat functionality (vanilla) ----------
+      const chatMessages = document.getElementById('chatMessages');
+      const chatInput = document.getElementById('chatInput');
+      const sendBtn = document.getElementById('sendChatBtn');
+
+      function addMessage(text, isSent = true) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${isSent ? 'sent' : 'received'}`;
+        msgDiv.innerText = text;
+        chatMessages.appendChild(msgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      sendBtn.addEventListener('click', () => {
+        const text = chatInput.value.trim();
+        if (text === '') return;
+        addMessage(text, true);
+        chatInput.value = '';
+      });
+
+      chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          sendBtn.click();
+        }
+      });
+
+      // initial system message is already in HTML; avoid duplication
+      // but ensure it's only once (already done)
+
+      // also close modal if user presses cancel while verifying? (they can but we have cancel anyway)
+      // minor fix: if verifying and cancel, but cancel just closes modal anyway – fine.
+
+      // optional: ensure video stops when modal opens etc. not needed.
+    })();
+  </script>
+</body>
+</html>
