@@ -29,26 +29,23 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 24px 8px;
   }
 
   /* ── Phone Shell ── */
   .phone {
     width: 100%;
-    max-width: 420px;
     background: var(--page-bg);
-    border-radius: 24px;
-    overflow: hidden;
     box-shadow: var(--shadow);
     display: flex;
     flex-direction: column;
-    min-height: 90vh;
+    height: 100%;
   }
 
   /* ── Header ── */
   .header {
     background: var(--green-header);
     padding: 18px 20px 16px;
+    width: 100%;
     display: flex;
     align-items: center;
     gap: 14px;
@@ -65,7 +62,7 @@
   }
   .back-btn svg { width: 24px; height: 24px; }
   .header h1 {
-    font-size: 22px;
+    font-size: 8vw;
     font-weight: 700;
     color: var(--text-dark);
     letter-spacing: .3px;
@@ -74,11 +71,12 @@
   /* ── Body ── */
   .body {
     background: var(--page-bg);
-    padding: 18px 16px 0;
+    padding: 18px 10px 0;
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 14px;
+    width: 100%;
     overflow-y: auto;
   }
 
@@ -104,6 +102,7 @@
     color: var(--text-dark);
     padding: 2px 4px;
     outline: none;
+    width: 70%;
   }
   .location-row input:focus { border-bottom-color: var(--accent-blue); }
 
@@ -113,6 +112,8 @@
     border: 1px solid var(--border);
     border-radius: 6px;
     overflow: hidden;
+    width: 100%;
+    min-width: 210px;
   }
 
   /* ── Table ── */
@@ -126,6 +127,7 @@
   thead th {
     padding: 9px 8px;
     font-weight: 700;
+    font-size: 4vw;
     color: var(--text-dark);
     text-align: center;
     border-bottom: 1.5px solid var(--border);
@@ -213,6 +215,7 @@
   .footer {
     padding: 20px 16px 24px;
     flex-shrink: 0;
+    width: 100%;
   }
   .print-btn {
     width: 100%;
@@ -247,9 +250,8 @@
   tbody tr:focus-within { background: #fafcff; }
 </style>
 </head>
-<body>
+<body class="phone">
 
-<div class="phone">
 
   <!-- Header -->
   <header class="header">
@@ -279,7 +281,7 @@
     <div class="table-card" id="table-card">
       <table id="memo-table">
         <thead>
-          <tr>
+          <tr id="rows-header">
             <th>পরিমাণ</th>
             <th>মালের বিবরণ</th>
             <th>দর</th>
@@ -320,7 +322,6 @@
     </button>
   </div>
 
-</div><!-- /phone -->
 
 <!-- Datalist for items -->
 <datalist id="items-list">
