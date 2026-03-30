@@ -101,6 +101,7 @@
     padding: 2px 4px;
     outline: none;
     width: 70%;
+    resize: none;
   }
   .location-row input:focus { border-bottom-color: var(--accent-blue); }
 
@@ -162,9 +163,16 @@
     outline: none;
     text-align: center;
     font-family: var(--font-main);
+    resize: none;
+    overflow: hidden;
   }
   .cell-input:focus { background: #f0f6ff; }
-  .cell-input[data-col="details"] { text-align: left; padding-left: 8px; }
+  .cell-input[data-col="details"] { 
+    text-align: left; 
+    padding-left: 8px;
+    min-height: 1.5em;
+    line-height: 1.5;
+  }
   .cell-input[data-col="taka"] { text-align: right; padding-right: 8px; }
   .cell-input[data-col="rate"] { text-align: right; padding-right: 6px; }
 
@@ -217,11 +225,11 @@
   }
   .print-btn {
     width: 100%;
-    padding: 15px;
+    padding: 10px  0;
     background: var(--btn-bg);
     border: none;
     border-radius: 50px;
-    font-size: 18px;
+    font-size: 5vw;
     font-weight: 700;
     color: var(--accent-blue);
     cursor: pointer;
@@ -234,7 +242,7 @@
   }
   .print-btn:hover { background: #b8cdf0; }
   .print-btn:active { transform: scale(.98); }
-  .print-btn svg { width: 24px; height: 24px; }
+  .print-btn svg { width: 15px; height: 15px; }
 
   /* ── Print Styles ── */
   @media print {
@@ -267,7 +275,7 @@
     <!-- Location -->
     <div class="location-row">
       <label for="location">ঠিকানা:</label>
-      <input id="location" type="text" list="location-list" autocomplete="off" placeholder="" />
+      <input id="location" type="text" list="location-list" autocomplete="off" spellcheck="false" placeholder="" />
       <datalist id="location-list">
         <option value="Shop A"/>
         <option value="Shop B"/>
@@ -454,18 +462,20 @@ function renderRow(row, idx) {
   inpCount.dataset.rowid = row.id;
   inpCount.value = row.count;
   inpCount.autocomplete = 'off';
+  inpCount.spellcheck = false;
   tdCount.appendChild(inpCount);
 
   // Details
   const tdDetails = document.createElement('td');
-  const inpDetails = document.createElement('input');
-  inpDetails.type = 'text';
+  const inpDetails = document.createElement('textarea');
   inpDetails.className = 'cell-input';
   inpDetails.dataset.col = 'details';
   inpDetails.dataset.rowid = row.id;
   inpDetails.value = row.details;
   inpDetails.setAttribute('list', 'items-list');
   inpDetails.autocomplete = 'off';
+  inpDetails.spellcheck = false;
+  inpDetails.rows = 1;
   tdDetails.appendChild(inpDetails);
 
   // Rate
@@ -537,8 +547,16 @@ function wireRow(row, tr, inpCount, inpDetails, inpRate, inpTaka) {
       inpTaka.value = formatTaka(row.taka);
     }
   }
+  
+  // Auto-resize textarea height
+  function autoResizeTextarea() {
+    inpDetails.style.height = 'auto';
+    inpDetails.style.height = inpDetails.scrollHeight + 'px';
+  }
+  
   inpDetails.addEventListener('input', () => {
     row.details = inpDetails.value;
+    autoResizeTextarea();
     applyItemMatch();
     onRowActivity(row);
     recalcTotal();
@@ -546,10 +564,14 @@ function wireRow(row, tr, inpCount, inpDetails, inpRate, inpTaka) {
   // Also handle datalist selection (change event)
   inpDetails.addEventListener('change', () => {
     row.details = inpDetails.value;
+    autoResizeTextarea();
     applyItemMatch();
     onRowActivity(row);
     recalcTotal();
   });
+  
+  // Initial resize
+  autoResizeTextarea();
 
   // ── Rate ──
   inpRate.addEventListener('input', () => {
