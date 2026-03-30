@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Cash Memo</title>
+<title>ক্যাশ মেমো</title>
 <style>
   /* ── Reset & Base ── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -258,7 +258,7 @@
         <polyline points="15 18 9 12 15 6"/>
       </svg>
     </button>
-    <h1>Cash Memo</h1>
+    <h1>ক্যাশ মেমো</h1>
   </header>
 
   <!-- Body -->
@@ -266,7 +266,7 @@
 
     <!-- Location -->
     <div class="location-row">
-      <label for="location">Location:</label>
+      <label for="location">ঠিকানা:</label>
       <input id="location" type="text" list="location-list" autocomplete="off" placeholder="" />
       <datalist id="location-list">
         <option value="Shop A"/>
@@ -280,10 +280,10 @@
       <table id="memo-table">
         <thead>
           <tr>
-            <th>Count</th>
-            <th>Item Details</th>
-            <th>Rate</th>
-            <th>Taka</th>
+            <th>পরিমাণ</th>
+            <th>মালের বিবরণ</th>
+            <th>দর</th>
+            <th>টাকা</th>
           </tr>
         </thead>
         <tbody id="rows-body">
@@ -300,7 +300,7 @@
         </div>
         <!-- Total Row -->
         <div class="summary-row">
-          <span class="summary-label" style="text-align:right;padding-right:4px;">Total-</span>
+          <span class="summary-label" style="text-align:right;padding-right:4px;">মোট-</span>
           <span class="summary-value" id="total-display">0</span>
         </div>
       </div>
