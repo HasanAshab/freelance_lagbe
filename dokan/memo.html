@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cash Memo</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-header: #c8e6c0;
+    --page-bg: #f0f0f0;
+    --card-bg: #fafafa;
+    --border: #c0c0c0;
+    --text-dark: #1a1a1a;
+    --text-mid: #444;
+    --text-light: #888;
+    --accent-blue: #2d4d9a;
+    --btn-bg: #c8d8f5;
+    --font-main: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --shadow: 0 2px 12px rgba(0,0,0,.12);
+  }
+
+  body {
+    font-family: var(--font-main);
+    background: #2a2a2a;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 24px 8px;
+  }
+
+  /* ── Phone Shell ── */
+  .phone {
+    width: 100%;
+    max-width: 420px;
+    background: var(--page-bg);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    min-height: 90vh;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--green-header);
+    padding: 18px 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+  .back-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    color: var(--text-dark);
+  }
+  .back-btn svg { width: 24px; height: 24px; }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: .3px;
+  }
+
+  /* ── Body ── */
+  .body {
+    background: var(--page-bg);
+    padding: 18px 16px 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow-y: auto;
+  }
+
+  /* ── Location ── */
+  .location-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 4px;
+  }
+  .location-row label {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-dark);
+    white-space: nowrap;
+  }
+  .location-row input {
+    flex: 1;
+    border: none;
+    border-bottom: 1.5px solid var(--border);
+    background: transparent;
+    font-size: 14px;
+    color: var(--text-dark);
+    padding: 2px 4px;
+    outline: none;
+  }
+  .location-row input:focus { border-bottom-color: var(--accent-blue); }
+
+  /* ── Table Card ── */
+  .table-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  /* ── Table ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+
+  /* Header row — bottom border + vertical lines between headers */
+  thead th {
+    padding: 9px 8px;
+    font-weight: 700;
+    color: var(--text-dark);
+    text-align: center;
+    border-bottom: 1.5px solid var(--border);
+    background: #fff;
+    /* vertical separator on the right of every col except last */
+    border-right: 1px solid var(--border);
+  }
+  thead th:last-child { border-right: none; }
+  thead th:nth-child(1) { width: 22%; }
+  thead th:nth-child(2) { width: 38%; }
+  thead th:nth-child(3) { width: 18%; }
+  thead th:nth-child(4) { width: 22%; }
+
+  /* Data rows — NO horizontal lines, only vertical column separators */
+  tbody tr { background: #fff; }
+  tbody td {
+    padding: 0;
+    vertical-align: middle;
+    border-top: none;
+    border-bottom: none;
+    /* vertical separator between columns */
+    border-right: 1px solid var(--border);
+  }
+  tbody td:last-child { border-right: none; }
+
+  /* Editable cells */
+  .cell-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 13.5px;
+    color: var(--text-dark);
+    padding: 8px 6px;
+    outline: none;
+    text-align: center;
+    font-family: var(--font-main);
+  }
+  .cell-input:focus { background: #f0f6ff; }
+  .cell-input[data-col="details"] { text-align: left; padding-left: 8px; }
+  .cell-input[data-col="taka"] { text-align: right; padding-right: 8px; }
+  .cell-input[data-col="rate"] { text-align: right; padding-right: 6px; }
+
+  /* ── Summary Rows ── */
+  .summary-section { border-top: 1.5px solid var(--border); }
+  .summary-row {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid var(--border);
+  }
+  .summary-row:first-child { border-top: none; }
+  .summary-label {
+    flex: 1;
+    padding: 9px 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-dark);
+    text-align: center;
+    /* vertical separator before Taka column */
+    border-right: 1px solid var(--border);
+  }
+  .summary-value {
+    width: 22%;
+    padding: 9px 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    text-align: right;
+    padding-right: 10px;
+  }
+  .car-rent-input {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    text-align: right;
+    padding: 9px 10px 9px 0;
+    width: 22%;
+    outline: none;
+    font-family: var(--font-main);
+  }
+  .car-rent-input:focus { background: #f0f6ff; }
+
+  /* ── Print / Footer ── */
+  .footer {
+    padding: 20px 16px 24px;
+    flex-shrink: 0;
+  }
+  .print-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--btn-bg);
+    border: none;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent-blue);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background .15s, transform .1s;
+    box-shadow: 0 2px 8px rgba(45,77,154,.15);
+  }
+  .print-btn:hover { background: #b8cdf0; }
+  .print-btn:active { transform: scale(.98); }
+  .print-btn svg { width: 24px; height: 24px; }
+
+  /* ── Print Styles ── */
+  @media print {
+    body { background: #fff; padding: 0; }
+    .phone { max-width: 100%; border-radius: 0; box-shadow: none; min-height: auto; }
+    .back-btn, .footer { display: none; }
+    .cell-input, .car-rent-input { -webkit-appearance: none; }
+  }
+
+  /* Subtle row focus ring */
+  tbody tr:focus-within { background: #fafcff; }
+</style>
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- Header -->
+  <header class="header">
+    <button class="back-btn" onclick="history.back()" title="Back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+    <h1>Cash Memo</h1>
+  </header>
+
+  <!-- Body -->
+  <div class="body">
+
+    <!-- Location -->
+    <div class="location-row">
+      <label for="location">Location:</label>
+      <input id="location" type="text" list="location-list" autocomplete="off" placeholder="" />
+      <datalist id="location-list">
+        <option value="Shop A"/>
+        <option value="Shop B"/>
+        <option value="Shop C"/>
+      </datalist>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card" id="table-card">
+      <table id="memo-table">
+        <thead>
+          <tr>
+            <th>Count</th>
+            <th>Item Details</th>
+            <th>Rate</th>
+            <th>Taka</th>
+          </tr>
+        </thead>
+        <tbody id="rows-body">
+          <!-- dynamic rows -->
+        </tbody>
+      </table>
+
+      <!-- Summary -->
+      <div class="summary-section" id="summary-section">
+        <!-- Car Rent Row -->
+        <div class="summary-row" id="car-rent-row">
+          <span class="summary-label">Car rent</span>
+          <input class="car-rent-input" id="car-rent-input" type="number" value="0" min="0" />
+        </div>
+        <!-- Total Row -->
+        <div class="summary-row">
+          <span class="summary-label" style="text-align:right;padding-right:4px;">Total-</span>
+          <span class="summary-value" id="total-display">0</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /body -->
+
+  <!-- Footer -->
+  <div class="footer">
+    <button class="print-btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"/>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+        <rect x="6" y="14" width="12" height="8"/>
+      </svg>
+      Print Out
+    </button>
+  </div>
+
+</div><!-- /phone -->
+
+<!-- Datalist for items -->
+<datalist id="items-list">
+  <option value="Rice"/>
+  <option value="Sugar"/>
+  <option value="Oil"/>
+</datalist>
+
+<script>
+/* ────────────────────────────────────────────────
+   DATA
+──────────────────────────────────────────────── */
+const LOCATIONS = ["Shop A", "Shop B", "Shop C"];
+
+const ITEMS = [
+  { details: "Rice",  rate: 60  },
+  { details: "Sugar", rate: 80  },
+  { details: "Oil",   rate: 150 },
+];
+
+/* ────────────────────────────────────────────────
+   STATE
+──────────────────────────────────────────────── */
+// Each row: { count, details, rate, taka, takaManual, rateManual }
+let rows = [];
+let carRent = 0;
+
+// When true, the very next Backspace keydown on any input is suppressed
+// (prevents held-Backspace from deleting content after backspace-navigation)
+let blockNextBackspace = false;
+
+/* ────────────────────────────────────────────────
+   HELPERS
+──────────────────────────────────────────────── */
+function parseCount(str) {
+  if (!str || !str.trim()) return 1;
+  const m = str.match(/[\d.]+/);
+  const n = m ? parseFloat(m[0]) : NaN;
+  return isNaN(n) || n === 0 ? 1 : n;
+}
+
+function parseRate(str) {
+  const n = parseFloat(str);
+  return isNaN(n) ? 0 : n;
+}
+
+function parseTaka(str) {
+  // strip commas from locale strings
+  const n = parseFloat(String(str).replace(/,/g, ''));
+  return isNaN(n) ? 0 : n;
+}
+
+function formatRate(n) {
+  if (!isFinite(n)) return "0";
+  if (Number.isInteger(n)) return String(n);
+  return n.toFixed(2);
+}
+
+function formatTaka(n) {
+  return Number(n).toLocaleString();
+}
+
+function isRowEmpty(row) {
+  return !row.details.trim() && !row.count.trim() &&
+         (row.rate === 0 || row.rate === "") &&
+         (row.taka === 0 || row.taka === "");
+}
+
+function findItem(details) {
+  return ITEMS.find(i => i.details.toLowerCase() === details.trim().toLowerCase());
+}
+
+/* ────────────────────────────────────────────────
+   TOTAL
+──────────────────────────────────────────────── */
+function recalcTotal() {
+  let sum = rows.reduce((acc, r) => acc + (parseTaka(r.taka) || 0), 0);
+  sum += parseTaka(carRent) || 0;
+  document.getElementById('total-display').textContent = formatTaka(sum);
+}
+
+/* ────────────────────────────────────────────────
+   ROW CREATION
+──────────────────────────────────────────────── */
+let rowIdCounter = 0;
+
+function createRowState() {
+  return {
+    id: rowIdCounter++,
+    count: "",
+    details: "",
+    rate: "",
+    taka: "",
+    takaManual: false,
+    rateManual: false,
+  };
+}
+
+function addEmptyRow() {
+  const r = createRowState();
+  rows.push(r);
+  renderRow(r, rows.length - 1);
+  return r;
+}
+
+function ensureTrailingEmpty() {
+  const last = rows[rows.length - 1];
+  if (!last || !isRowEmpty(last)) {
+    addEmptyRow();
+  }
+}
+
+/* ────────────────────────────────────────────────
+   RENDER A SINGLE ROW INTO <tbody>
+──────────────────────────────────────────────── */
+function renderRow(row, idx) {
+  const tbody = document.getElementById('rows-body');
+
+  // Remove existing row with same id if any
+  const existing = tbody.querySelector(`tr[data-rowid="${row.id}"]`);
+  if (existing) existing.remove();
+
+  const tr = document.createElement('tr');
+  tr.dataset.rowid = row.id;
+
+  // Count
+  const tdCount = document.createElement('td');
+  const inpCount = document.createElement('input');
+  inpCount.type = 'text';
+  inpCount.className = 'cell-input';
+  inpCount.dataset.col = 'count';
+  inpCount.dataset.rowid = row.id;
+  inpCount.value = row.count;
+  inpCount.autocomplete = 'off';
+  tdCount.appendChild(inpCount);
+
+  // Details
+  const tdDetails = document.createElement('td');
+  const inpDetails = document.createElement('input');
+  inpDetails.type = 'text';
+  inpDetails.className = 'cell-input';
+  inpDetails.dataset.col = 'details';
+  inpDetails.dataset.rowid = row.id;
+  inpDetails.value = row.details;
+  inpDetails.setAttribute('list', 'items-list');
+  inpDetails.autocomplete = 'off';
+  tdDetails.appendChild(inpDetails);
+
+  // Rate
+  const tdRate = document.createElement('td');
+  const inpRate = document.createElement('input');
+  inpRate.type = 'number';
+  inpRate.className = 'cell-input';
+  inpRate.dataset.col = 'rate';
+  inpRate.dataset.rowid = row.id;
+  inpRate.value = row.rate;
+  inpRate.min = 0;
+  tdRate.appendChild(inpRate);
+
+  // Taka
+  const tdTaka = document.createElement('td');
+  const inpTaka = document.createElement('input');
+  inpTaka.type = 'text';
+  inpTaka.className = 'cell-input';
+  inpTaka.dataset.col = 'taka';
+  inpTaka.dataset.rowid = row.id;
+  inpTaka.value = row.taka !== "" ? formatTaka(row.taka) : "";
+  inpTaka.style.textAlign = 'right';
+  tdTaka.appendChild(inpTaka);
+
+  tr.append(tdCount, tdDetails, tdRate, tdTaka);
+
+  // Insert before the summary section — append to tbody
+  tbody.appendChild(tr);
+
+  // Wire events
+  wireRow(row, tr, inpCount, inpDetails, inpRate, inpTaka);
+}
+
+/* ────────────────────────────────────────────────
+   WIRE ROW EVENTS
+──────────────────────────────────────────────── */
+function wireRow(row, tr, inpCount, inpDetails, inpRate, inpTaka) {
+
+  // ── Count ──
+  inpCount.addEventListener('input', () => {
+    row.count = inpCount.value;
+    if (!row.takaManual) {
+      // Use cnt=1 when count has no number; use actual rate (not rt>0 guard)
+      const cnt = countHasNumber(row) ? parseCount(row.count) : 1;
+      const rt  = parseRate(row.rate);
+      if (!isNaN(rt) && rt > 0) {
+        row.taka = cnt * rt;
+        inpTaka.value = formatTaka(row.taka);
+      }
+    }
+    onRowActivity(row);
+    recalcTotal();
+  });
+
+  // ── Details ──
+  function applyItemMatch() {
+    const match = findItem(row.details);
+    if (!match) return;
+    const hasNum = /\d/.test(row.count);
+    // Always auto-fill Rate from datalist (regardless of count)
+    if (!row.rateManual) {
+      row.rate = match.rate;
+      inpRate.value = match.rate;
+    }
+    // Only fill Taka when count contains a number
+    if (!row.takaManual && hasNum) {
+      const cnt = parseCount(row.count);
+      row.taka = cnt * match.rate;
+      inpTaka.value = formatTaka(row.taka);
+    }
+  }
+  inpDetails.addEventListener('input', () => {
+    row.details = inpDetails.value;
+    applyItemMatch();
+    onRowActivity(row);
+    recalcTotal();
+  });
+  // Also handle datalist selection (change event)
+  inpDetails.addEventListener('change', () => {
+    row.details = inpDetails.value;
+    applyItemMatch();
+    onRowActivity(row);
+    recalcTotal();
+  });
+
+  // ── Rate ──
+  inpRate.addEventListener('input', () => {
+    row.rateManual = true;
+    row.rate = parseRate(inpRate.value);
+    if (!row.takaManual) {
+      // When count has no number, treat as 1 (issue 2)
+      const cnt = countHasNumber(row) ? parseCount(row.count) : 1;
+      row.taka = cnt * row.rate;
+      inpTaka.value = formatTaka(row.taka);
+    }
+    onRowActivity(row);
+    recalcTotal();
+  });
+
+  // ── Taka ──
+  // ── Taka: only allow numeric input ──
+  inpTaka.addEventListener('keydown', (e) => {
+    // Allow: backspace, delete, arrows, tab, home, end, enter
+    const allowed = ['Backspace','Delete','ArrowLeft','ArrowRight','ArrowUp','ArrowDown',
+                     'Tab','Home','End','Enter'];
+    if (allowed.includes(e.key)) return;
+    // Allow Ctrl/Cmd shortcuts (copy, paste, select all, etc.)
+    if (e.ctrlKey || e.metaKey) return;
+    // Allow digits and a single decimal point
+    if (/^[0-9.]$/.test(e.key)) {
+      // Prevent a second decimal point
+      if (e.key === '.' && inpTaka.value.includes('.')) e.preventDefault();
+      return;
+    }
+    // Block everything else
+    e.preventDefault();
+  });
+
+  inpTaka.addEventListener('focus', () => {
+    // Show raw number on focus for easy editing
+    const raw = parseTaka(inpTaka.value);
+    inpTaka.value = raw === 0 && !row.takaManual ? "" : raw || "";
+  });
+
+  inpTaka.addEventListener('blur', () => {
+    const raw = parseTaka(inpTaka.value);
+    if (inpTaka.value.trim() !== "") {
+      inpTaka.value = formatTaka(raw);
+    }
+  });
+
+  inpTaka.addEventListener('input', () => {
+    row.takaManual = true;
+    const takaVal = parseTaka(inpTaka.value);
+    row.taka = takaVal;
+    // Back-calculate Rate only when Count contains a number (issue 3)
+    // When no number in Count, keep Rate as-is (don't clear it either)
+    if (countHasNumber(row)) {
+      const cnt = parseCount(row.count);
+      if (cnt > 0) {
+        const newRate = takaVal / cnt;
+        row.rate = parseFloat(formatRate(newRate));
+        inpRate.value = formatRate(row.rate);
+      }
+    }
+    // If no number in count: Rate stays empty/untouched — do not write it
+    onRowActivity(row);
+    recalcTotal();
+  });
+
+  // ── Keyboard Navigation ──
+  // Track consecutive backspace-on-empty streak per input
+  const emptyBackstreaks = new Map();
+  [inpCount, inpDetails, inpRate, inpTaka].forEach(inp => {
+    emptyBackstreaks.set(inp, 0);
+
+    inp.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleEnter(row, inp, inpCount, inpDetails, inpRate, inpTaka);
+        return;
+      }
+
+      if (e.key === 'Backspace') {
+        // Suppress the first backspace after navigation so held key
+        // doesn't immediately delete content in the newly focused input
+        if (blockNextBackspace) {
+          e.preventDefault();
+          blockNextBackspace = false;
+          return;
+        }
+        if (inp.value === '') {
+          const streak = (emptyBackstreaks.get(inp) || 0) + 1;
+          emptyBackstreaks.set(inp, streak);
+          if (streak >= 2) {
+            emptyBackstreaks.set(inp, 0);
+            e.preventDefault();
+            blockNextBackspace = true;
+            focusPrevInput(row, inp, inpCount, inpDetails, inpRate, inpTaka);
+          }
+        } else {
+          emptyBackstreaks.set(inp, 0);
+        }
+        return;
+      }
+
+      // Any other key resets the backspace streak
+      emptyBackstreaks.set(inp, 0);
+    });
+  });
+}
+
+/* ────────────────────────────────────────────────
+   ENTER KEY LOGIC
+──────────────────────────────────────────────── */
+function countHasNumber(row) {
+  return /[\d]/.test(row.count);
+}
+
+function handleEnter(row, currentInput, inpCount, inpDetails, inpRate, inpTaka) {
+  // Count field: always go to Details regardless of content
+  if (currentInput === inpCount) {
+    inpDetails.focus();
+    return;
+  }
+
+  // Details field: if Count has no number (or is empty) → skip Rate, go to Taka
+  if (currentInput === inpDetails) {
+    if (!countHasNumber(row)) {
+      inpTaka.focus();
+    } else {
+      inpRate.focus();
+    }
+    return;
+  }
+
+  // Rate field: if Rate is empty/zero → go to Taka; else → next row
+  if (currentInput === inpRate) {
+    const rateEmpty = inpRate.value.trim() === '' || parseRate(inpRate.value) === 0;
+    if (rateEmpty) {
+      inpTaka.focus();
+    } else {
+      focusNextRowCount(row);
+    }
+    return;
+  }
+
+  // Taka field: always move to next row
+  if (currentInput === inpTaka) {
+    focusNextRowCount(row);
+    return;
+  }
+}
+
+/* ────────────────────────────────────────────────
+   FOCUS PREVIOUS INPUT (Backspace streak)
+──────────────────────────────────────────────── */
+function focusPrevInput(row, currentInput, inpCount, inpDetails, inpRate, inpTaka) {
+  if (currentInput === inpTaka) { inpRate.focus(); return; }
+  if (currentInput === inpRate) { inpDetails.focus(); return; }
+  if (currentInput === inpDetails) { inpCount.focus(); return; }
+  if (currentInput === inpCount) {
+    // Go to previous row's Taka
+    const idx = rows.indexOf(row);
+    if (idx > 0) {
+      const prevRow = rows[idx - 1];
+      const tbody = document.getElementById('rows-body');
+      const prevTr = tbody.querySelector(`tr[data-rowid="${prevRow.id}"]`);
+      if (prevTr) {
+        const prevTaka = prevTr.querySelector('[data-col="taka"]');
+        if (prevTaka) prevTaka.focus();
+      }
+    }
+  }
+}
+
+function focusNextRowCount(currentRow) {
+  const idx = rows.indexOf(currentRow);
+  const nextRow = rows[idx + 1];
+  if (nextRow) {
+    const tbody = document.getElementById('rows-body');
+    const nextTr = tbody.querySelector(`tr[data-rowid="${nextRow.id}"]`);
+    if (nextTr) {
+      const nextCount = nextTr.querySelector('[data-col="count"]');
+      if (nextCount) nextCount.focus();
+    }
+  }
+}
+
+/* ────────────────────────────────────────────────
+   ACTIVITY: ensure trailing empty row
+──────────────────────────────────────────────── */
+function onRowActivity(row) {
+  const last = rows[rows.length - 1];
+  if (!isRowEmpty(row) && row === last) {
+    ensureTrailingEmpty();
+  }
+}
+
+/* ────────────────────────────────────────────────
+   COLUMN CLICK → FOCUS LAST ROW INPUT
+   (click on td/th, not directly on input)
+──────────────────────────────────────────────── */
+document.getElementById('table-card').addEventListener('click', (e) => {
+  if (e.target.tagName === 'INPUT') return; // let native focus handle it
+
+  // Figure out which column was clicked
+  const th = e.target.closest('th');
+  const td = e.target.closest('td');
+  const cell = th || td;
+  if (!cell) return;
+
+  // Get column index
+  const row = cell.parentElement;
+  const cells = Array.from(row.children);
+  const colIdx = cells.indexOf(cell);
+  if (colIdx < 0) return;
+
+  const cols = ['count', 'details', 'rate', 'taka'];
+  const colName = cols[colIdx];
+  if (!colName) return;
+
+  // Focus last data row's input for that column
+  const tbody = document.getElementById('rows-body');
+  const allTrs = tbody.querySelectorAll('tr');
+  if (!allTrs.length) return;
+  const lastTr = allTrs[allTrs.length - 1];
+  const target = lastTr.querySelector(`[data-col="${colName}"]`);
+  if (target) target.focus();
+});
+
+/* ────────────────────────────────────────────────
+   CAR RENT
+──────────────────────────────────────────────── */
+const carRentInput = document.getElementById('car-rent-input');
+carRentInput.addEventListener('input', () => {
+  carRent = parseTaka(carRentInput.value);
+  recalcTotal();
+});
+
+/* ────────────────────────────────────────────────
+   INIT
+──────────────────────────────────────────────── */
+function init() {
+  // Populate location datalist
+  const locList = document.getElementById('location-list');
+  locList.innerHTML = '';
+  LOCATIONS.forEach(l => {
+    const opt = document.createElement('option');
+    opt.value = l;
+    locList.appendChild(opt);
+  });
+
+  // Populate items datalist
+  const itemList = document.getElementById('items-list');
+  itemList.innerHTML = '';
+  ITEMS.forEach(i => {
+    const opt = document.createElement('option');
+    opt.value = i.details;
+    itemList.appendChild(opt);
+  });
+
+  // Add first empty row
+  addEmptyRow();
+  recalcTotal();
+}
+
+init();
+</script>
+</body>
+</html>
