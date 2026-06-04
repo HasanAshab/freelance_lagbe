@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ক্যাশ মেমো প্রিন্টার</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0e0e0e;
+      --surface: #161616;
+      --border: #252525;
+      --accent: #e8a020;
+      --text: #d8d8d8;
+      --muted: #555;
+      --input-bg: #0a0a0a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    header h1 { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+    header .badge {
+      font-size: 10px; color: var(--muted); border: 1px solid var(--border);
+      padding: 3px 8px; letter-spacing: .08em;
+    }
+
+    /* ── Layout ── */
+    .main { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── Form Panel ── */
+    .form-panel {
+      width: 360px;
+      min-width: 360px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .sec-label {
+      font-size: 9.5px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .field { margin-bottom: 10px; }
+    .field label { display: block; font-size: 10px; color: var(--muted); margin-bottom: 4px; letter-spacing: .05em; }
+    .field input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 7px 9px;
+      font-family: 'Noto Sans Bengali', 'IBM Plex Mono', monospace;
+      font-size: 12.5px;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .field input:focus { border-color: var(--accent); }
+
+    .row2 { display: flex; gap: 8px; }
+    .row2 .field { flex: 1; }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+    /* ── Items Mini-Table ── */
+    .items-wrap { flex: 1; }
+    .items-head {
+      display: grid;
+      grid-template-columns: 44px 1fr 44px 20px;
+      gap: 4px;
+      padding: 4px 4px 6px;
+      border-bottom: 1px solid var(--border);
+      font-size: 9.5px;
+      letter-spacing: .1em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .item-row {
+      display: grid;
+      grid-template-columns: 44px 1fr 44px 20px;
+      gap: 4px;
+      margin-bottom: 4px;
+      align-items: center;
+    }
+    .item-row input {
+      background: var(--input-bg);
+      border: 1px solid transparent;
+      color: var(--text);
+      padding: 5px 5px;
+      font-family: 'Noto Sans Bengali', 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      outline: none;
+      width: 100%;
+      transition: border-color .15s;
+    }
+    .item-row input:focus { border-color: var(--accent); }
+    .item-row input.num { font-family: 'IBM Plex Mono', monospace; text-align: right; }
+    .rm-btn {
+      background: none; border: none; color: #333; cursor: pointer;
+      font-size: 15px; line-height: 1; padding: 2px; transition: color .15s;
+    }
+    .rm-btn:hover { color: #c44; }
+
+    .add-btn {
+      width: 100%; background: none; border: 1px dashed var(--border);
+      color: var(--muted); padding: 7px; font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; cursor: pointer; transition: all .15s; letter-spacing: .05em;
+      margin-top: 6px;
+    }
+    .add-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .print-btn {
+      width: 100%; background: var(--accent); border: none; color: #0e0e0e;
+      padding: 11px; font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+      font-weight: 600; cursor: pointer; letter-spacing: .12em; text-transform: uppercase;
+      margin-top: 16px; transition: opacity .15s;
+    }
+    .print-btn:hover { opacity: .85; }
+    .print-btn:active { opacity: .7; }
+
+    /* ── Preview Panel ── */
+    .preview-panel {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 24px;
+      background: #080808;
+      overflow-y: auto;
+    }
+
+    /* ══ THE RECEIPT ══ */
+    #receipt {
+      background: #fff;
+      width: 290px;
+      padding: 14px 12px 12px;
+      font-family: 'Noto Sans Bengali', sans-serif;
+      font-size: 11.5px;
+      color: #111;
+      box-shadow: 0 8px 40px rgba(0,0,0,.7), 0 2px 8px rgba(0,0,0,.4);
+      position: relative;
+    }
+    /* Torn-paper effect top/bottom */
+    #receipt::before, #receipt::after {
+      content: '';
+      display: block;
+      height: 8px;
+      background: repeating-linear-gradient(90deg, #080808 0 6px, #fff 6px 12px);
+      position: absolute; left: 0; right: 0;
+    }
+    #receipt::before { top: -8px; }
+    #receipt::after  { bottom: -8px; }
+
+    .r-header { text-align: center; padding-bottom: 8px; }
+    .r-badge {
+      display: inline-block; border: 1.5px solid #333; border-radius: 30px;
+      padding: 2px 12px; font-size: 10.5px; margin-bottom: 6px;
+    }
+    .r-storename { font-size: 17px; font-weight: 700; line-height: 1.35; margin-bottom: 3px; }
+    .r-addr { font-size: 10.5px; color: #555; line-height: 1.55; }
+
+    .r-meta { margin: 8px 0 4px; font-size: 11.5px; }
+    .r-meta .r-no { font-size: 14px; font-weight: 700; margin-bottom: 2px; font-family: 'IBM Plex Mono', monospace; }
+    .r-meta div { font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.7; }
+
+    .r-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0;
+      font-size: 11.5px;
+    }
+    .r-table th {
+      background: #efefef;
+      border: 1px solid #bbb;
+      padding: 4px 3px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 11px;
+    }
+    .r-table td {
+      border: 1px solid #c8c8c8;
+      padding: 4px 3px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .r-table td.name { text-align: left; padding-left: 5px; }
+    .r-table tfoot td {
+      border-top: 2px solid #333;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 5px 5px 5px 3px;
+    }
+    .r-table tfoot .total-label { text-align: right; }
+    .r-table tfoot .total-amt { text-align: right; font-family: 'IBM Plex Mono', monospace; }
+
+    .r-footer {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .r-note { font-size: 10px; color: #555; max-width: 62%; line-height: 1.5; }
+    .r-sig { text-align: center; font-size: 13px; font-weight: 600; }
+    .r-sig-line { border-top: 1.5px solid #333; width: 64px; margin: 0 auto 3px; }
+
+    /* ══ PRINT STYLES ══ */
+    @media print {
+      @page {
+        size: 80mm auto;
+        margin: 3mm 2mm;
+      }
+
+      body * { visibility: hidden; }
+
+      #receipt, #receipt * { visibility: visible; }
+
+      #receipt {
+        position: fixed !important;
+        left: 0 !important; top: 0 !important;
+        width: 76mm !important;
+        padding: 2mm 2mm !important;
+        box-shadow: none !important;
+        font-size: 10pt;
+      }
+
+      #receipt::before, #receipt::after { display: none; }
+
+      .r-storename { font-size: 14pt; }
+      .r-meta .r-no { font-size: 12pt; }
+      .r-table th, .r-table td { font-size: 9pt; }
+      .r-table tfoot td { font-size: 11pt; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>▪ ক্যাশ মেমো প্রিন্টার</h1>
+  <span class="badge">Thermal · 80mm</span>
+</header>
+
+<div class="main">
+
+  <!-- ── Form Panel ── -->
+  <div class="form-panel">
+    <div class="sec-label">Store Info</div>
+
+    <div class="field">
+      <label>Store Name</label>
+      <input id="f-store" type="text" value="রাজধানী কোনফেকশনারি এন্ড জেনারেল স্টোর">
+    </div>
+    <div class="field">
+      <label>Address</label>
+      <input id="f-addr" type="text" value="বাংলাদেশ প্রকৌশল বিশ্ববিদ্যালয় মার্কেট ১৪৬ নং বাজার, ঢাকা">
+    </div>
+
+    <hr>
+    <div class="sec-label">Memo Details</div>
+
+    <div class="row2">
+      <div class="field"><label>Memo No.</label><input id="f-no" type="text" value="1235" style="font-family:'IBM Plex Mono',monospace"></div>
+      <div class="field"><label>Date</label><input id="f-date" type="text" value="3/6/26" style="font-family:'IBM Plex Mono',monospace"></div>
+    </div>
+    <div class="field">
+      <label>Mobile</label>
+      <input id="f-mobile" type="text" value="01521 20738" style="font-family:'IBM Plex Mono',monospace">
+    </div>
+
+    <hr>
+    <div class="sec-label">Items</div>
+
+    <div class="items-wrap">
+      <div class="items-head">
+        <span>Qty</span><span>Item</span><span style="text-align:right">Rate</span><span></span>
+      </div>
+      <div id="items-container"></div>
+    </div>
+
+    <button class="add-btn" onclick="addItem()">+ Add Item</button>
+    <button class="print-btn" onclick="window.print()">Print Receipt</button>
+  </div>
+
+  <!-- ── Preview Panel ── -->
+  <div class="preview-panel">
+    <div id="receipt">
+      <div class="r-header">
+        <div class="r-badge">ক্যাশ মেমো</div>
+        <div class="r-storename" id="p-store">—</div>
+        <div class="r-addr" id="p-addr">—</div>
+      </div>
+
+      <div class="r-meta">
+        <div class="r-no">No.- <span id="p-no">—</span></div>
+        <div>Mobile: <span id="p-mobile">—</span></div>
+        <div>Date: <span id="p-date">—</span></div>
+      </div>
+
+      <table class="r-table">
+        <thead>
+          <tr>
+            <th style="width:34px">পরিমাণ</th>
+            <th>মালের বিবরণ</th>
+            <th style="width:28px">দর</th>
+            <th style="width:40px">টাকা</th>
+          </tr>
+        </thead>
+        <tbody id="p-items"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="total-label">মোট-</td>
+            <td class="total-amt" id="p-total">0</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div class="r-footer">
+        <div class="r-note">বি: দ্র: বিক্রীত মাল ফেরত লওয়া হয় না</div>
+        <div class="r-sig">
+          <div class="r-sig-line"></div>
+          সাক্ষর
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const FIELDS = ['f-store','f-addr','f-no','f-date','f-mobile'];
+
+  let items = [
+    { qty: 10, name: 'মাফিন',        rate: 10 },
+    { qty: 7,  name: 'পানি ১ লিটার', rate: 30 },
+    { qty: 4,  name: 'মিল্ক ব্রেড',  rate: 50 },
+    { qty: 12, name: 'মোজা ২৫০ মি.লি', rate: 20 },
+  ];
+
+  // ── Render form rows ──
+  function renderForm() {
+    const c = document.getElementById('items-container');
+    c.innerHTML = '';
+    items.forEach((item, i) => {
+      const row = document.createElement('div');
+      row.className = 'item-row';
+      row.innerHTML = `
+        <input class="num" type="number" value="${item.qty}" min="0"
+               oninput="update(${i},'qty',+this.value)">
+        <input type="text" value="${item.name}" placeholder="Item name"
+               oninput="update(${i},'name',this.value)">
+        <input class="num" type="number" value="${item.rate}" min="0"
+               oninput="update(${i},'rate',+this.value)">
+        <button class="rm-btn" onclick="removeItem(${i})">×</button>
+      `;
+      c.appendChild(row);
+    });
+  }
+
+  // ── Render receipt preview ──
+  function renderPreview() {
+    document.getElementById('p-store').textContent  = document.getElementById('f-store').value;
+    document.getElementById('p-addr').textContent   = document.getElementById('f-addr').value;
+    document.getElementById('p-no').textContent     = document.getElementById('f-no').value;
+    document.getElementById('p-mobile').textContent = document.getElementById('f-mobile').value;
+    document.getElementById('p-date').textContent   = document.getElementById('f-date').value;
+
+    const tbody = document.getElementById('p-items');
+    tbody.innerHTML = '';
+    let total = 0;
+
+    items.forEach(item => {
+      const qty  = parseFloat(item.qty)  || 0;
+      const rate = parseFloat(item.rate) || 0;
+      const amt  = qty * rate;
+      total += amt;
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${qty || ''}</td>
+        <td class="name">${item.name || ''}</td>
+        <td>${rate || ''}</td>
+        <td>${amt || ''}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById('p-total').textContent = total;
+  }
+
+  function update(i, key, val) {
+    items[i][key] = val;
+    renderPreview();
+  }
+
+  function addItem() {
+    items.push({ qty: 1, name: '', rate: 0 });
+    renderForm();
+    renderPreview();
+  }
+
+  function removeItem(i) {
+    items.splice(i, 1);
+    renderForm();
+    renderPreview();
+  }
+
+  // Live sync form fields → preview
+  FIELDS.forEach(id => document.getElementById(id).addEventListener('input', renderPreview));
+
+  // Init
+  renderForm();
+  renderPreview();
+</script>
+</body>
+</html>
